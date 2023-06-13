@@ -1,0 +1,86 @@
+﻿@{
+    ViewData["Title"] = "Заказы";
+}
+
+<table>
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>Букет</th>
+            <th>Дата</th>
+            <th>Время</th>
+            <th>Адрес</th>
+            <th>Флорист</th>
+            @if (User.IsInRole("admin"))
+            {
+                <th></th>
+            }
+            
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var ranking in Model)
+        {
+            <tr>
+                <td>@(Model.IndexOf(ranking) + 1)</td>
+                <td>@ranking.Bouquet.Name</td>
+                <td>@ranking.Date</td>
+                <td>@ranking.Time</td>
+                <td>@ranking.Address</td>
+                <td>@ranking.Florist.ShortName</td>
+                @if (User.IsInRole("admin"))
+                {
+                    <td>
+                        <form method="post" action="@Url.Action("DeleteOrder", "Home")">
+                            <input type="hidden" name="Id" value="@ranking.Id" />
+                            <button type="submit" class="btn btn-danger">Удалить</button>
+                        </form>
+                    </td>
+                }
+
+
+            </tr>
+        }
+    </tbody>
+</table>
+@if (User.IsInRole("admin"))
+{
+    <br />
+    <br />
+    <p>Добавить заказ:</p>
+    <form method="post" asp-action="AddOrder">
+    <div>
+            <div>
+                <label>Букет:</label>
+                <select id="bouquetId" name="bouquetId" required>
+                    @foreach (var bouquet in ViewBag.Bouquets)
+                    {
+                        <option value="@bouquet.Id">@bouquet.Name</option>
+                    }
+                </select>
+            </div>
+        <div>
+            <label>Дата:</label>
+            <input type="date" id="date" name="date" required />
+        </div>
+        <div>
+            <label>Время:</label>
+                <input type="time" id="time" name="time" required />
+        </div>
+        <div>
+            <label>Адрес:</label>
+            <input type="text" id="address" name="address" required />
+        </div>
+        <div>
+                <label>Флорист:</label>
+                <select id="floristId" name="floristId" required>
+                @foreach (var florist in ViewBag.Florists)
+                {
+                    <option value="@florist.Id">@florist.ShortName</option>
+                }
+            </select>
+    </div>
+    <button type="submit">Добавить</button>
+    </form>
+
+}

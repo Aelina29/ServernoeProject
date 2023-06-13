@@ -1,0 +1,52 @@
+﻿@{
+    ViewData["Title"] = "Заказы";
+}
+
+@if (User.IsInRole("admin"))
+{
+    <form method="post" asp-action="CreateBouquet">
+        <div>
+            <p>Добавить Букет</p>
+            <label>Название</label>
+            <input type="text" name="Name" />
+        </div>
+        <div>
+            <label>Описание</label>
+            <input type="text" name="Description" />
+        </div>
+        <button type="submit">Добавить</button>
+    </form>
+    <br />
+}
+<table>
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>Букет</th>
+            <th>Описание</th>
+            @if (User.IsInRole("admin"))
+            {
+                <th></th>
+            }
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var ranking in Model)
+        {
+            <tr>
+                <td>@(Model.IndexOf(ranking) + 1)</td>
+                <td>@ranking.Name</td>
+                <td>@ranking.Description</td>
+                @if (User.IsInRole("admin"))
+                {
+                    <td>
+                        <form method="post" action="@Url.Action("DeleteBouquet", "Home")">
+                            <input type="hidden" name="Id" value="@ranking.Id" />
+                            <button type="submit" class="btn btn-danger">Удалить</button>
+                        </form>
+                    </td>
+                }
+            </tr>
+        }
+    </tbody>
+</table>

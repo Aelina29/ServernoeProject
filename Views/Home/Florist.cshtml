@@ -1,0 +1,53 @@
+﻿@{
+    ViewData["Title"] = "Флористы";
+}
+
+@if (User.IsInRole("admin"))
+{
+    <form method="post" asp-action="AddFlorist">
+        <div>
+            <p>Добавить Флориста</p>
+            <label>ФИО</label>
+            <input type="text" name="FullName" />
+        </div>
+        <div>
+            <label>Имя</label>
+            <input type="text" name="ShortName" />
+        </div>
+        <button type="submit">Добавить</button>
+    </form>
+    <br />
+}
+<table>
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>Имя</th>
+            <th>ФИО</th>
+            @if (User.IsInRole("admin"))
+            {
+                <th></th>
+            }
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var ranking in Model)
+        {
+            <tr>
+                <td>@(Model.IndexOf(ranking) + 1)</td>
+                <td>@ranking.ShortName</td>
+                <td>@ranking.FullName</td>
+                @if (User.IsInRole("admin"))
+                {
+                    <td>
+                        <form method="post" action="@Url.Action("DeleteFlorist", "Home")">
+                            <input type="hidden" name="Id" value="@ranking.Id" />
+                            <button type="submit" class="btn btn-danger">Удалить</button>
+                        </form>
+                    </td>
+                }
+
+            </tr>
+        }
+    </tbody>
+</table>
